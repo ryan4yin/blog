@@ -24,8 +24,7 @@ draft: false
 ## 我的学习清单
 
 ### 最高优先级
-深入学习 - nginx - openresty - apisix
-promql - join_left、计算多指标之间运算
+- nginx + openresty + apisix
 
 ### 高优先级
 
