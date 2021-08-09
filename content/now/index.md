@@ -39,10 +39,9 @@ draft: false
 ### 中优先级
 
 - 容器底层原理
-- linux 性能
+- linux 性能测试、优化及相关工具
   - ebpf
 - redis 底层原理
-
 
 ### 低优先级
 
