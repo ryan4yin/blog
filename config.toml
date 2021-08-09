@@ -296,14 +296,14 @@ theme = "CodeIT"
     url = "/categories/"
     title = ""
     weight = 3
-  # [[menu.main]]
-  #   identifier = "now"
-  #   pre = ""
-  #   post = ""
-  #   name = "此刻"
-  #   url = "/now/"
-  #   title = ""
-  #   weight = 4
+  [[menu.main]]
+    identifier = "now"
+    pre = ""
+    post = ""
+    name = "此刻"
+    url = "/now/"
+    title = ""
+    weight = 4
   [[menu.main]]
     identifier = "friends"
     pre = ""
