@@ -33,16 +33,16 @@ draft: false
   - iptables、eftables
   - lvs
   - tun/tap
-- linux 性能
-  - 如何做性能测试？使用什么工具，需要注意哪些问题？
-  - ebpf
+- k8s 网络插件 - calico/flannel/cilium
+
 
 ### 中优先级
 
 - 容器底层原理
-- k8s 网络插件 - calico/flannel/cilium
+- linux 性能
+  - ebpf
 - redis 底层原理
-- 《图解设计模式》
+
 
 ### 低优先级
 
