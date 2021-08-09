@@ -11,7 +11,7 @@ draft: false
 - 学习 nginx - openresty - apisix
 - 工作中，在自己负责的领域，建立起 ownership
 - 学习新公司的工作模式：OKR 工作法
-- 学习新公司的思维模式
+- 学习新公司的思维模式（识别关键问题）
   - 如何从公司的角度去思考问题，找到我们目前最应该做的事情
   - 从以下角度去评价一件事情的重要性
     - 这件事情对我们目前的目标有多大帮助？
@@ -53,3 +53,15 @@ draft: false
 - 数据库原理：tinysql/tinykv
 
 - 英语词汇量
+
+
+---
+
+## 我想读的书
+
+- [Computer Systems: A Programmer's Perspective, 3/E (CS:APP3e)](http://www.csapp.cs.cmu.edu/)
+- [Designing Data-Intensive Applications](https://dataintensive.net/)
+- [The Linux Programming Interface](https://www.man7.org/tlpi/index.html)
+- Computer Networking: A Top-Down Approach, 7th Edition
+- [Systems Performance: Enterprise and the Cloud, 2nd Edition (2020)](http://www.brendangregg.com/systems-performance-2nd-edition-book.html)
+
