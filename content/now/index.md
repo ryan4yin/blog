@@ -24,16 +24,19 @@ draft: false
 ## 我的学习清单
 
 ### 最高优先级
-- nginx + openresty + apisix
+
+- 学习使用 nginx、openresty、apisix 
+- APISIX 源码阅读，以及插件开发
 
 ### 高优先级
 
-- linux 网络：
+- linux 网络
   - linux bridge
   - iptables、eftables
   - lvs
   - tun/tap
-- k8s 网络插件 - calico/flannel/cilium
+- 阅读 nginx 源码
+  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
 
 
 ### 中优先级
@@ -42,6 +45,8 @@ draft: false
 - linux 性能测试、优化及相关工具
   - ebpf
 - redis 底层原理
+- mysql/postgresql 底层原理
+- k8s 网络插件 - calico/flannel/cilium
 
 ### 低优先级
 
