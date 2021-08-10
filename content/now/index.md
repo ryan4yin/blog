@@ -38,10 +38,8 @@ draft: false
 ### 高优先级
 
 - linux 网络
-  - linux bridge
-  - iptables、eftables
+  - iptables
   - lvs
-  - tun/tap
 - C 语言源码阅读计划
   - 简单
     - wrk/wrk2
@@ -61,6 +59,13 @@ draft: false
 - redis 底层原理
 - mysql/postgresql 底层原理
 - k8s 网络插件 - calico/flannel/cilium
+- 写几个小项目
+  - 实现一个文本编辑器
+    - https://viewsourcecode.org/snaptoken/kilo/
+  - 实现一个简单的 Linux 容器
+    - https://blog.lizzie.io/linux-containers-in-500-loc.html
+  - 网络代理
+    - https://github.com/songgao/water: 不到 2000 行的 TUN 库
 
 ### 低优先级
 
