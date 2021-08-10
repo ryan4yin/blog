@@ -42,7 +42,16 @@ draft: false
   - iptables、eftables
   - lvs
   - tun/tap
-
+- C 语言源码阅读计划
+  - 简单
+    - wrk/wrk2
+    - GNU coreutils
+    - SQLite
+  - 进阶
+    - Nginx
+    - Redis
+    - CPython
+    - Linux
 
 ### 中优先级
 
