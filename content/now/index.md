@@ -4,9 +4,15 @@ date: 2021-02-01T14:14:35+08:00
 draft: false
 ---
 
+## 2021-08-09 => now
+
+- APISIX 源码阅读，以及插件开发
+- 阅读 nginx 源码
+  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
+
 ---
 
-## 2021-03 => now
+## 2021-03-11 => 2021-08-09
 
 - 学习 nginx - openresty - apisix
 - 工作中，在自己负责的领域，建立起 ownership
@@ -25,8 +31,9 @@ draft: false
 
 ### 最高优先级
 
-- 学习使用 nginx、openresty、apisix 
 - APISIX 源码阅读，以及插件开发
+- 阅读 nginx 源码
+  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
 
 ### 高优先级
 
@@ -35,8 +42,6 @@ draft: false
   - iptables、eftables
   - lvs
   - tun/tap
-- 阅读 nginx 源码
-  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
 
 
 ### 中优先级
