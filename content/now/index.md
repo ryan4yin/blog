@@ -37,9 +37,8 @@ draft: false
 
 ### 高优先级
 
-- linux 网络
-  - iptables
-  - lvs
+- 容器底层原理
+- k8s 网络插件 - calico/flannel/cilium
 - C 语言源码阅读计划
   - 简单
     - wrk/wrk2
@@ -53,12 +52,10 @@ draft: false
 
 ### 中优先级
 
-- 容器底层原理
 - linux 性能测试、优化及相关工具
   - ebpf
 - redis 底层原理
 - mysql/postgresql 底层原理
-- k8s 网络插件 - calico/flannel/cilium
 - 写几个小项目
   - 实现一个文本编辑器
     - https://viewsourcecode.org/snaptoken/kilo/

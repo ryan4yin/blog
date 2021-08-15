@@ -26,7 +26,7 @@ iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的
 
 默认情况下，iptables 提供了四张表和五条链，数据在这四表五链中的处理流程如下图所示：
 
-![iptables-chains](./_imgs/iptables-chains.png)
+![iptables-chains](/images/iptables/iptables-chains.png)
 
 对照上图，对于发送到某个用户层程序的数据而言，流量顺序如下：
 
@@ -441,6 +441,7 @@ default via 192.168.31.1 dev wlp4s0 proto dhcp metric 600
 -A DOCKER -i br-ac3e0514d837 -j RETURN
 -A DOCKER -i docker0 -j RETURN
 # 主机上所有其他接口进来的 tcp 流量，只要目标端口是 8081，就转发到 caddy 容器去（端口映射）
+# DOCKER 是被 PREROUTEING 链的 target，因此这会导致流量直接走了 FORWARD 链，直接绕过了通常设置在 INPUT 链的主机防火墙规则！
 -A DOCKER ! -i br-ac3e0514d837 -p tcp -m tcp --dport 8081 -j DNAT --to-destination 172.18.0.2:80
 
 ❯ sudo iptables -t filter -S
