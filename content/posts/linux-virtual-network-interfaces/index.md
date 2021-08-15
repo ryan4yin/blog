@@ -7,11 +7,9 @@ resources:
 - name: "featured-image"
   src: "linux-network.jpg"
 
-tags: ["Linux", "网络", "虚拟化"]
+tags: ["Linux", "网络", "虚拟化", "容器"]
 categories: ["技术"]
 ---
-
->本文部分文字、图标以及代码示例来自参考文章，通俗的说我就是复制粘贴了一遍，并且稍微改了改，然后做了些实验...
 
 >本文用到的字符画工具：[vscode-asciiflow2](https://github.com/zenghongtu/vscode-asciiflow2)
 
