@@ -479,6 +479,33 @@ default via 192.168.31.1 dev wlp4s0 proto dhcp metric 600
 到这里，我们简单地分析了下 docker 如何通过 iptables 实现 bridge 网络和端口映射。
 有了这个基础，后面就可以尝试深入分析 kubernetes 网络插件 flannel/calico/cilium 了哈哈。
 
+
+## Rootless 容器的网络实现
+
+如果容器运行时也在 Rootless 模式下运行，那它就没有权限在宿主机添加 bridge/veth 等虚拟网络接口，这种情况下，我们前面描述的容器网络就无法设置了。
+
+那么 podman/containerd(nerdctl) 目前是如何在 Rootless 模式下构建容器网络的呢？
+
+查看文档，发现它们都用到了 rootlesskit 相关的东西，而 rootlesskit 提供了 rootless 网络的几个实现，文档参见 [rootlesskit/docs/network.md](https://github.com/rootless-containers/rootlesskit/blob/master/docs/network.md)
+
+其中目前推荐使用，而且 podman/containerd(nerdctl) 都默认使用的方案，是 [rootless-containers/slirp4netns](https://github.com/rootless-containers/slirp4netns)
+
+以 containerd(nerdctl) 为例，按官方文档安装好后，随便启动几个容器，然后在宿主机查 `iptables`/`ip addr ls`，会发现啥也没有。
+这显然是因为 rootless 模式下 containerd 改不了宿主机的 iptables 配置和虚拟网络接口。但是可以查看到宿主机 slirp4netns 在后台运行：
+
+```shell
+❯ ps aux | grep tap
+ryan     11644  0.0  0.0   5288  3312 ?        S    00:01   0:02 slirp4netns --mtu 65520 -r 3 --disable-host-loopback --enable-sandbox --enable-seccomp 11625 tap0
+```
+
+但是我看半天文档，只看到怎么使用 `rootlesskit`/`slirp4netns` 创建新的名字空间，没看到有介绍如何进入一个已存在的 `slirp4netns` 名字空间...
+
+使用 `nsenter -a -t 11644` 也一直报错，任何程序都是 `no such binary`...
+
+以后有空再重新研究一波...
+
+总之能确定的是，它通过在虚拟的名字空间中创建了一个 `tap` 虚拟接口来实现容器网络，性能相比前面介绍的网络多少是要差一点的。
+
 ## nftables
 
 前面介绍了 iptables 以及其在 docker 和防火墙上的应用。但是实际上目前各大 Linux 发行版都已经不建议使用 iptables 了，甚至把 iptables 重命名为了 `iptables-leagacy`.
@@ -529,3 +556,4 @@ table ip6 firewalld {
 
 - [iptables详解（1）：iptables概念](https://www.zsythink.net/archives/1199)
 - [网络地址转换（NAT）之报文跟踪](https://linux.cn/article-13364-1.html)
+- [容器安全拾遗 - Rootless Container初探](https://developer.aliyun.com/article/700923)
