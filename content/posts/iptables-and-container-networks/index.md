@@ -119,7 +119,13 @@ iptables -F INPUT
 
 ## conntrack 连接跟踪与 NAT
 
-netfilter 的 conntrack 连接跟踪功能是 iptables 实现 SNAT/DNAT/MASQUERADE 的前提条件，在上一节给出的数据包处理流程图中，就有给出 conntrack 生效的位置——在 PREROUTEING 和 OUTPUT 表的 raw 链之后生效。
+在讲 conntrack 之间，我们再回顾下前面给出过的 netfilter 数据处理流程图：
+
+![iptables-packet-flow](/images/iptables/iptables-packet-flow-ng.png)
+
+上一节中我们忽略了图中的 conntrack，它就是本节的主角——netfilter 的连接跟踪（connection tracking）模块。
+
+netfilter/conntrack 是 iptables 实现 SNAT/DNAT/MASQUERADE 的前提条件，上面的流程图显示， conntrack 在 PREROUTEING 和 OUTPUT 表的 raw 链之后生效。
 
 下面以 docker 默认的 bridge 网络为例详细介绍下 conntrack 的功能。
 
