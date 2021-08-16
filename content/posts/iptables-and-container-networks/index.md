@@ -3,13 +3,14 @@ title: "iptables 及 docker 容器网络分析"
 date: 2021-08-15T19:11:29+08:00
 draft: false
 
-lightgallery: true
 resources:
 - name: "featured-image"
   src: "docker-turtles-networking.jpg"
 
 tags: ["Linux", "网络", "虚拟化", "容器", "iptables", "conntrack"]
 categories: ["技术"]
+
+lightgallery: true
 ---
 
 >本文仅针对 ipv4 网络
@@ -30,7 +31,7 @@ iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的
 
 >在这里的介绍中，可以先忽略掉图中 link layer 层的链路，它属于 ebtables 的范畴。另外 `conntrack` 也暂时忽略，在下一小节会详细介绍 conntrack 的功能。
 
-![iptables-packet-flow](/images/iptables/iptables-packet-flow-ng.png)
+![](/images/iptables/iptables-packet-flow-ng.png "iptables-packet-flow")
 
 对照上图，对于发送到某个用户层程序的数据而言，流量顺序如下：
 
@@ -121,7 +122,7 @@ iptables -F INPUT
 
 在讲 conntrack 之间，我们再回顾下前面给出过的 netfilter 数据处理流程图：
 
-![iptables-packet-flow](/images/iptables/iptables-packet-flow-ng.png)
+![](/images/iptables/iptables-packet-flow-ng.png "iptables-packet-flow")
 
 上一节中我们忽略了图中的 conntrack，它就是本节的主角——netfilter 的连接跟踪（connection tracking）模块。
 
