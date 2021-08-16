@@ -21,6 +21,7 @@ iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的
 
 ## 概念 - 四表五链
 
+>实际上还有张 SELinux 相关的 security 表（应该是较新的内核新增的，但是不清楚是哪个版本加的），但是我基本没接触过，就略过了。
 
 详细的说明参见 [iptables详解（1）：iptables概念](https://www.zsythink.net/archives/1199)，这篇文章写得非常棒！
 
