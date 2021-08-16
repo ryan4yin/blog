@@ -3,6 +3,7 @@ title: "iptables 及 docker 容器网络分析"
 date: 2021-08-15T19:11:29+08:00
 draft: false
 
+lightgallery: true
 resources:
 - name: "featured-image"
   src: "docker-turtles-networking.jpg"
@@ -19,15 +20,17 @@ iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的
 
 但是 eBPF 社区目前正在开发旨在取代 netfilter 的新项目 bpfilter，他们的目标之一是兼容 iptables/nftables 规则，让我们拭目以待吧。
 
-## 概念 - 四表五链
+## iptables 基础概念 - 四表五链
 
 >实际上还有张 SELinux 相关的 security 表（应该是较新的内核新增的，但是不清楚是哪个版本加的），但是我基本没接触过，就略过了。
 
-详细的说明参见 [iptables详解（1）：iptables概念](https://www.zsythink.net/archives/1199)，这篇文章写得非常棒！
+详细的说明参见 [iptables详解（1）：iptables概念 - 朱双印](https://www.zsythink.net/archives/1199)，这篇文章写得非常棒！把 iptables 讲清楚了。
 
-默认情况下，iptables 提供了四张表和五条链，数据在这四表五链中的处理流程如下图所示：
+默认情况下，iptables 提供了四张表（不考虑 security 的话）和五条链，数据在这四表五链中的处理流程如下图所示：
 
-![iptables-chains](/images/iptables/iptables-packet-flow-ng.png)
+>在这里的介绍中，可以先忽略掉图中 link layer 层的链路，它属于 ebtables 的范畴。另外 `conntrack` 也暂时忽略，在下一小节会详细介绍 conntrack 的功能。
+
+![iptables-packet-flow](/images/iptables/iptables-packet-flow-ng.png)
 
 对照上图，对于发送到某个用户层程序的数据而言，流量顺序如下：
 
@@ -116,9 +119,9 @@ iptables -F INPUT
 
 ## conntrack 连接跟踪与 NAT
 
-netfilter 的 conntrack 连接跟踪功能是 iptables 实现 SNAT/DNAT/MASQUERADE 的前提条件。
+netfilter 的 conntrack 连接跟踪功能是 iptables 实现 SNAT/DNAT/MASQUERADE 的前提条件，在上一节给出的数据包处理流程图中，就有给出 conntrack 生效的位置——在 PREROUTEING 和 OUTPUT 表的 raw 链之后生效。
 
-下面以 docker 默认的 bridge 网络为例进行介绍。
+下面以 docker 默认的 bridge 网络为例详细介绍下 conntrack 的功能。
 
 首先，这是我在「Linux 的虚拟网络接口」文中给出过的 docker0 网络架构图:
 
