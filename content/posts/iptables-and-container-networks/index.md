@@ -27,7 +27,7 @@ iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的
 
 默认情况下，iptables 提供了四张表和五条链，数据在这四表五链中的处理流程如下图所示：
 
-![iptables-chains](/images/iptables/iptables-chains.png)
+![iptables-chains](/images/iptables/iptables-packet-flow-ng.png)
 
 对照上图，对于发送到某个用户层程序的数据而言，流量顺序如下：
 
