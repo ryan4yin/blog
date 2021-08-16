@@ -32,17 +32,14 @@ draft: false
 ### 最高优先级
 
 - APISIX 源码阅读，以及插件开发
-- 阅读 nginx 源码
-  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
+- 容器底层原理
+- k8s 网络插件 - calico/flannel
 
 ### 高优先级
 
-- 容器底层原理
-- k8s 网络插件 - calico/flannel/cilium
 - C 语言源码阅读计划
   - 简单
     - wrk/wrk2
-    - GNU coreutils
     - SQLite
   - 进阶
     - Nginx
@@ -61,8 +58,8 @@ draft: false
     - https://viewsourcecode.org/snaptoken/kilo/
   - 实现一个简单的 Linux 容器
     - https://blog.lizzie.io/linux-containers-in-500-loc.html
-  - 网络代理
-    - https://github.com/songgao/water: 不到 2000 行的 TUN 库
+  - 网络代理（不到 2000 行的 TUN 库）
+    - https://github.com/songgao/water
 
 ### 低优先级
 
