@@ -8,7 +8,9 @@ draft: false
 ## 2021-08-17 => now
 
 - k8s 网络插件 - calico/flannel
-
+- 容器底层原理：
+  - 容器镜像的构建与使用
+  - linux namespace 与 cgroups
 
 ---
 
