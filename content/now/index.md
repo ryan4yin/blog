@@ -4,11 +4,18 @@ date: 2021-02-01T14:14:35+08:00
 draft: false
 ---
 
-## 2021-08-09 => now
 
-- APISIX 源码阅读，以及插件开发
-- 阅读 nginx 源码
-  - 阅读途中需要补充各种网络、linux、数据结构、C 语言相关的知识。
+## 2021-08-17 => now
+
+- k8s 网络插件 - calico/flannel
+
+
+---
+
+## 2021-08-12 => 2021-08-16
+
+- Linux 的虚拟网络接口
+- Linux 的 netfilter 网络处理框架，以及其子项目 iptables/conntrack
 
 ---
 
@@ -37,15 +44,7 @@ draft: false
 
 ### 高优先级
 
-- C 语言源码阅读计划
-  - 简单
-    - wrk/wrk2
-    - SQLite
-  - 进阶
-    - Nginx
-    - Redis
-    - CPython
-    - Linux
+- 深入学习 Nginx 源码
 
 ### 中优先级
 
