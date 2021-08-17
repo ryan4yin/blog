@@ -19,4 +19,4 @@ categories: ["技术"]
 
 ## 参考
 
-
+- [数据包在 Kubernetes 中的一生（2）](https://blog.fleeto.us/post/life-of-a-packet-in-k8s-2/)
