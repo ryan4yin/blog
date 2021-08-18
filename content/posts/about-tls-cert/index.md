@@ -11,6 +11,14 @@ tags: ["HTTPS", "TLS", "OpenSSL", "加密", "破解"]
 categories: ["技术"]
 ---
 
+
+## 更新记录
+
+- [ ] 补充 TLS 协议的详细流程
+- [x] 完成 TLS 证书的详细介绍
+
+---
+
 ## 一、TLS 协议
 
 我们需要加密网络数据以实现安全通信，但是有一个现实的问题：
@@ -499,6 +507,14 @@ openssl pkcs12 -in xxx.p12 -out xxx.key -nocerts -nodes
 
 
 ## 参考
+
+
+### TLS 协议
+
+- [HTTPS 温故知新（三） —— 直观感受 TLS 握手流程(上)](https://halfrost.com/https_tls1-2_handshake/)
+- [HTTPS 温故知新（五） —— TLS 中的密钥计算](https://halfrost.com/https-key-cipher/)
+
+### TLS 证书
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
 - [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
