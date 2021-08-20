@@ -49,5 +49,5 @@ ip netns xx
 ## 参考
 
 - [Linux Namespace 技术与 Docker 原理浅析](https://creaink.github.io/post/Computer/Linux/Linux-namespace.html): 循序渐进，只需要 50 行代码就能实现一个简单的「容器」环境。
-- [](https://www.cnblogs.com/ryanyangcs/p/12591372.html)
+- [Linux Namespace 入门系列：Namespace API](https://www.cnblogs.com/ryanyangcs/p/12591372.html)
 - [docker 容器基础技术：linux cgroup 简介](https://cizixs.com/2017/08/25/linux-cgroup/)
