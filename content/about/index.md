@@ -16,7 +16,7 @@ lightgallery: true
 - **音乐**：喜欢听后摇、蓝草、民谣、器乐。喜欢玩口琴、竹笛，另外想要学习键盘/作曲但是还没入门...
 - **书籍**：读得最多的是技术书籍，另外也喜欢看科幻，以及戒不掉的网文/轻小说
 - **影视**：看得最多的是动漫，另外就是欧美科幻片、温情片（This Is Us）
-- **中文输入方案**：[小鹤音形](https://flypy.com/)赛高！
+- **中文输入方案**：[小鹤音形](https://flypy.com/)
 - **专业**：大学学的是声学，没错就是初中物理课上敲音叉的那个声学。本人专业知识战五渣，就不展开了hhh
 - **自然语言**
   - **English**: Good at reading technical articles, but weak in writing, listening and speaking.
@@ -24,13 +24,12 @@ lightgallery: true
 - **编程语言**
   - Python: 目前的主力，也是我最熟悉的语言。
   - Go: 学习中，云原生圈子里最流行的语言。
+  - Rust: 学习中，大量函数式的语法糖，贴心的编译器提示，感觉很好用。
   - 曾经使用过但已经荒废的语言：C/Java/Julia/Mathematica
-  - 感兴趣但尚未入门的语言: Rust/Elixir
-- **职业**：**云原生运维**
-  - 目前专注于以 Kubernetes 为核心的云原生技术圈，思考如何更好地利用这些技术优化基础设施，使基础设施能**稳定高效**地支撑业务不断成长。
-- **工具或技术**：会用 Kubernetes/Istio/Flagger/Pulumi/QEMU-KVM，但是对底层欠缺了解。
-- **理论基础**：Linux 底层知识还很欠缺、计算机网络还有很多要补、CSAPP/SICP 没看完、Redis等数据库相关知识还知之甚少、算法也忘差不多了、微积分线代概率论复变函数也都忘了。是的还有太多需要补习的理论基础知识。
-
+- **职业**：**SRE**
+  - 维护与优化计算平台及流量链路，**稳定高效**地支撑快速成长的业务。
+- **工具或技术**：Kubernetes/Istio/APISIX
+  - 正在深入学习相关的底层技术如 Linux Namespace/Cgroups，BGP/vxlan，eBPF，Nginx 等。
 
 ## 关于此博客
 
