@@ -5,12 +5,20 @@ draft: false
 ---
 
 
-## 2021-08-17 => now
+## now
 
 - k8s 网络插件 - calico/flannel
 - 容器底层原理：
   - 容器镜像的构建与使用
   - linux namespace 与 cgroups
+
+---
+
+## 2021-08-19 => 2021-08-22
+
+- 阅读 rust 语言的官方文档：the book
+- 边读文档边做 rustlings 的小习题
+- 使用 rust 重写了一版 video2chars
 
 ---
 
