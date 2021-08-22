@@ -18,6 +18,7 @@ draft: false
 
 - 阅读 rust 语言的官方文档：the book
 - 边读文档边做 rustlings 的小习题
+  - 目前完成了除 macros 以及 conversions/{try_from_into, from_str} 之外的所有题。
 - 使用 rust 重写了一版 video2chars
 
 ---
