@@ -13,9 +13,11 @@ categories: ["技术"]
 
 >本文用到的字符画工具：[vscode-asciiflow2](https://github.com/zenghongtu/vscode-asciiflow2)
 
+>注意: 本文中使用 `ip` 命令创建或修改的任何网络配置，都是未持久化的，主机重启即消失。
+
 Linux 具有强大的虚拟网络能力，这也是 openstack 网络、docker 容器网络以及 kubernetes 网络等虚拟网络的基础。
 
-这里介绍 Linux 常用的虚拟网络接口类型：TUN/TAP、bridge 以及 veth。
+这里介绍 Linux 常用的虚拟网络接口类型：TUN/TAP、bridge、veth、ipvlan/macvlan、vlan 以及 vxlan/geneve.
 
 ## 一、tun/tap 虚拟网络接口
 
@@ -286,7 +288,7 @@ veth 接口总是成对出现，一对 veth 接口就类似一根网线，从一
 其主要作用就是连接不同的网络，比如在容器网络中，用于将容器的 namespace 与 root namespace 的网桥 br0 相连。
 容器网络中，容器侧的 veth 自身设置了 ip/mac 地址并被重命名为 eth0，作为容器的网络接口使用，而主机侧的 veth 则直接连接在 docker0/br0 上面。
 
-使用 veth 的容器网络的详细示例图，在下一节有提供。
+使用 veth 实现容器网络，需要结合下一小节介绍的 bridge，在下一小节将给出容器网络结构图。
 
 ## 三、bridge
 
@@ -349,6 +351,8 @@ Linux Bridge 是工作在链路层的网络交换机，由 Linux 内核模块 `b
 ```
 
 ### 跨 namespace 通信场景（容器网络，NAT 模式）
+
+>docker/podman 提供的 bridge 网络模式，就是使用 veth+bridge+iptalbes 实现的。我会在下一篇文章详细介绍「容器网络」。
 
 由于容器运行在自己单独的 network namespace 里面，所以和虚拟机一样，它们也都有自己单独的协议栈。
 
@@ -415,12 +419,178 @@ docker0         8000.0242fce99ef5       no              vethea4171a
 ```
 
 
-## 四、其他虚拟网络接口的类型
 
-除了上面介绍的这些，Linux 还支持 VLAN、VXLAN 等类型的虚拟网络接口，可通过 `ip link help` 查看，因为我接触的少，这里就不介绍了。
+## 四、macvlan
+
+>目前 docker/podman 都支持使用 `--driver macvlan` 来使用 `macvlan` 创建容器网络。
+
+>[Use macvlan networks - Docker Docs](https://docs.docker.com/network/macvlan/)
+
+>参考文档：[linux 网络虚拟化： macvlan](https://cizixs.com/2017/02/14/network-virtualization-macvlan/)
+
+macvlan 是比较新的 Linux 特性，需要内核版本 >= 3.9，它被用于在主机的网络接口（父接口）上配置多个虚拟子接口，这些子接口都拥有各自独立的 mac 地址，也可以配上 ip 地址进行通讯。
+
+macvlan 下的虚拟机或者容器网络和主机在同一个网段中，共享同一个广播域。macvlan 和 bridge 比较相似，但因为它省去了 bridge 的存在，所以配置和调试起来比较简单，而且效率也相对高。除此之外，macvlan 自身也完美支持 VLAN。
+
+如果希望容器或者虚拟机放在主机相同的网络中，享受已经存在网络栈的各种优势，可以考虑 macvlan。
 
 
-## 五、虚拟网络接口的速率
+## 五、ipvlan
+
+>目前 docker 已支持使用 `--driver ipvlan` 来使用 `ipvlan` 创建容器网络，[podman 正计划支持](https://github.com/containers/podman/issues/10478).
+>[Use ipvlan networks - Docker Docs](https://docs.docker.com/network/ipvlan/)
+>[linux 网络虚拟化： ipvlan](https://cizixs.com/2017/02/17/network-virtualization-ipvlan/)
+
+ipvlan 和 macvlan 的功能很类似，也是用于在主机的网络接口（父接口）上配置出多个虚拟的子接口。但不同的是，ipvlan 的各子接口没有独立的 mac 地址，它们和主机的父接口共享 mac 地址。
+
+>因为 mac 地址共享，所以如果使用 DHCP，就要注意不能使用 mac 地址做 DHCP，需要额外配置唯一的 clientID.
+
+如果你遇到以下的情况，请考虑使用 ipvlan：
+
+- 父接口对 mac 地址数目有限制，或者在 mac 地址过多的情况下会造成严重的性能损失
+- 工作在 802.11(wireless)无线网络中（macvlan 无法和无线网络共同工作）
+- 希望搭建比较复杂的网络拓扑（不是简单的二层网络和 VLAN），比如要和 BGP 网络一起工作
+
+
+## 六、vlan
+
+vlan 即虚拟局域网，是一个链路层的广播域隔离技术，可以用于切分局域网，解决广播泛滥和安全性问题。被隔离的广播域之间需要上升到第三层才能完成通讯。
+
+常用的企业路由器如 ER-X 基本都可以设置 vlan，Linux 也直接支持了 vlan.
+
+以太网数据包有一个专门的字段提供给 vlan 使用，vlan 数据包会在该位置记录它的 VLAN ID，交换机通过该 ID 来区分不同的 VLAN，只将该以太网报文广播到该 ID 对应的 VLAN 中。
+
+
+## 七、vxlan/geneve
+
+>[rfc8926 - Geneve: Generic Network Virtualization Encapsulation](https://datatracker.ietf.org/doc/html/rfc8926)
+>[rfc7348 - Virtual eXtensible Local Area Network (VXLAN)](https://datatracker.ietf.org/doc/html/rfc7348)
+
+>[linux 上实现 vxlan 网络](https://cizixs.com/2017/09/28/linux-vxlan/)
+
+在介绍 vxlan 前，先说明下两个名词的含义：
+
+- **underlay 网络**：即物理网络
+- **overlay 网络**：指在现有的物理网络之上构建的虚拟网络。其实就是一种隧道技术，将原生态的二层数据帧报文进行封装后通过隧道进行传输。
+
+vxlan 与 geneve 都是 overlay 网络协议，它俩都是使用 UDP 包来封装链路层的以太网帧。
+
+vxlan 在 2014 年标准化，而 geneve 在 2020 年底才通过草案阶段，目前尚未形成最终标准。但是目前 linux/cilium 都已经支持了 geneve.
+
+geneve 相对 vxlan 最大的变化，是它更灵活——它的 header 长度是可变的。
+
+目前所有 overlay 的跨主机容器网络方案，几乎都是基于 vxlan 实现的（例外：cilium 也支持 geneve）。
+
+>我们在学习单机的容器网络时，不需要接触到 vxlan，但是在学习跨主机容器网络方案如 flannel/calico/cilium 时，那 vxlan(overlay) 及 BGP(underlay) 就不可避免地要接触了。
+
+先介绍下 vxlan 的数据包结构：
+
+![](/images/linux-virtual-interfaces/vxlan-frame.png "VXLAN 栈帧结构")
+
+在创建 vxlan 的 vtep 虚拟设备时，我们需要手动设置图中的如下属性：
+
+- VXLAN 目标端口：即接收方 vtep 使用的端口，这里 IANA 定义的端口是 4789，但是只有 calico 的 vxlan 模式默认使用该端口 calico，而 cilium/flannel 的默认端口都是 Linux 默认的 8472.
+- VNID: 每个 VXLAN 网络接口都会被分配一个独立的 VNID
+
+一个点对点的 vxlan 网络架构图如下:
+
+![](/images/linux-virtual-interfaces/vxlan-architecture.gif "VXLAN 点对点网络架构")
+
+可以看到每台虚拟机 VM 都会被分配一个唯一的 VNID，然后两台物理机之间通过 VTEP 虚拟网络设备建立了 VXLAN 隧道，所有 VXLAN 网络中的虚拟机，都通过 VTEP 来互相通信。
+
+有了上面这些知识，我们就可以通过如下命令在两台 Linux 机器间建立一个**点对点的 VXLAN 隧道**：
+
+```shell
+# 在主机 A 上创建 VTEP 设备 vxlan0
+# 与另一个 vtep 接口 B（192.168.8.101）建立隧道
+# 将 vxlan0 自身的 IP 地址设为 192.168.8.100
+# 使用的 VXLAN 目标端口为 4789(IANA 标准)
+ip link add vxlan0 type vxlan \
+    id 42 \
+    dstport 4789 \
+    remote 192.168.8.101 \
+    local 192.168.8.100 \
+    dev enp0s8
+# 为我们的 VXLAN 网络设置虚拟网段，vxlan0 就是默认网关
+ip addr add 10.20.1.2/24 dev vxlan0
+# 启用我们的 vxlan0 设备，这会自动生成路由规则
+ip link set vxlan0 up
+
+# 现在在主机 B 上运行如下命令，同样创建一个 VTEP 设备 vxlan0，remote 和 local 的 ip 与前面用的命令刚好相反。
+# 注意 VNID 和 dstport 必须和前面完全一致
+ip link add vxlan0 type vxlan \
+    id 42 \
+    dstport 4789 \
+    remote 192.168.8.100 \
+    local 192.168.8.101 \
+    dev enp0s8
+# 为我们的 VXLAN 网络设置虚拟网段，vxlan0 就是默认网关
+ip addr add 10.20.1.3/24 dev vxlan0
+ip link set vxlan0 up
+
+# 到这里，两台机器就完成连接，可以通信了。可以在主机 B 上 ping 10.20.1.2 试试，应该能收到主机 A 的回应。
+ping 10.20.1.2
+```
+
+点对点的 vxlan 隧道实际用处不大，如果集群中的每个节点都互相建 vxlan 隧道，代价太高了。
+
+一种更好的方式，是使用 **「组播模式」的 vxlan 隧道**，这种模式下一个 vtep 可以一次与组内的所有 vtep 建立隧道。
+示例命令如下（这里略过了如何设置组播地址 `239.1.1.1` 的信息）：
+
+```shell
+ip link add vxlan0 type vxlan \
+    id 42 \
+    dstport 4789 \
+    group 239.1.1.1 \
+    dev enp0s8 
+ip addr add 10.20.1.2/24 dev vxlan0
+ip link set vxlan0 up
+```
+
+可以看到，只需要简单地把 local_ip/remote_ip 替换成一个组播地址就行。组播功能会将收到的数据包发送给组里的所有 vtep 接口，但是只有 VNID 能对上的 vtep 会处理该报文，其他 vtep 会直接丢弃数据。
+
+接下来，为了能让所有的虚拟机/容器，都通过 vtep 通信，我们再添加一个 bridge 网络，充当 vtep 与容器间的交换机。架构如下：
+
+![](/images/linux-virtual-interfaces/linux-vxlan-with-bridge.jpg "VXLAN 多播网络架构")
+
+
+使用 ip 命令创建网桥、网络名字空间、veth pairs 组成上图中的容器网络：
+
+```shell
+# 创建 br0 并将 vxlan0 绑定上去
+ip link add br0 type bridge
+ip link set vxlan0 master bridge
+ip link set vxlan0 up
+ip link set br0 up
+
+# 模拟将容器加入到网桥中的操作
+ip netns add container1
+
+## 创建 veth pair，并把一端加到网桥上
+ip link add veth0 type veth peer name veth1
+ip link set dev veth0 master br0
+ip link set dev veth0 up
+
+## 配置容器内部的网络和 IP
+ip link set dev veth1 netns container1
+ip netns exec container1 ip link set lo up
+
+ip netns exec container1 ip link set veth1 name eth0
+ip netns exec container1 ip addr add 10.20.1.11/24 dev eth0
+ip netns exec container1 ip link set eth0 up
+```
+
+然后在另一台机器上做同样的操作，并创建新容器，两个容器就能通过 vxlan 通信啦~
+
+### 比组播更高效的 vxlan 实现
+
+组播最大的问题在于，因为它不知道数据的目的地，所以每个 vtep 都发了一份。如果每次发数据时，如果能够精确到对应的 vtep，就能节约大量资源。
+
+另一个问题是 ARP 查询也会被组播，要知道 vxlan 本身就是个 overlay 网络，ARP 的成本也很高。
+
+上述问题都可以通过一个中心化的注册中心（如 etcd）来解决，所有容器、网络的注册与变更，都写入到这个注册中心，然后由程序自动维护 vtep 之间的隧道、fdb 表及 ARP 表.
+
+## 八、虚拟网络接口的速率
 
 Loopback 和本章讲到的其他虚拟网络接口一样，都是一种软件模拟的网络设备。
 他们的速率是不是也像物理链路一样，存在链路层（比如以太网）的带宽限制呢？
